@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boletines Oficiales 2023</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            color: #333;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        #container {
+            max-width: 600px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #keywordInput {
+            width: 80%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+
+        #resultBox {
+            text-align: left;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+
+        #downloadButton {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1 style="color: #4caf50;">Boletines Oficiales 2023</h1>
+        <label for="keywordInput">Palabra Clave:</label>
+        <input type="text" id="keywordInput">
+        <button onclick="searchKeyword()">Buscar</button>
+        <div id="resultBox"></div>
+        <a href="#" id="downloadButton" download="resultados.pdf" onclick="downloadResults()">Descargar PDF</a>
+    </div>
+
+    <script>
+        function searchKeyword() {
+            var keyword = document.getElementById('keywordInput').value.toLowerCase();
+            var resultBox = document.getElementById('resultBox');
+
+            fetch('http://www.ejemplo.com/boletin2023.txt') // Reemplaza con la URL real
+                .then(response => response.text())
+                .then(contenido => {
+                    // Convertir a minúsculas y quitar acentos
+                    var contenidoLowerCase = quitarAcentos(contenido.toLowerCase());
+
+                    if (contenidoLowerCase.includes(keyword)) {
+                        resultBox.innerText = contenido;
+                    } else {
+                        resultBox.innerText = "No se encontraron resultados.";
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar el archivo:', error);
+                });
+        }
+
+        function quitarAcentos(texto) {
+            return texto.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function downloadResults() {
+            var resultText = document.getElementById('resultBox').innerText;
+            var blob = new Blob([resultText], { type: 'application/pdf' });
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'resultados.pdf';
+            link.click();
+        }
+    </script>
+</body>
+</html>
